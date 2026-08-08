@@ -1,6 +1,11 @@
 "use client";
 
-import { Complaint, deleteComplaint } from "@/services/complaintService";
+import {
+  Complaint,
+  deleteComplaint,
+  updateComplaintStatus,
+} from "@/services/complaintService";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -19,21 +24,38 @@ export default function ComplaintCard({
   };
 
   async function handleDelete() {
-    const confirmDelete = confirm(
-      "Are you sure you want to delete this complaint?"
-    );
-
-    if (!confirmDelete) return;
+    if (!confirm("Delete this complaint?")) return;
 
     try {
       await deleteComplaint(complaint._id);
-
-      alert("Complaint deleted successfully.");
-
+      alert("Complaint deleted.");
       window.location.reload();
     } catch (error) {
       console.error(error);
       alert("Failed to delete complaint.");
+    }
+  }
+
+  async function handleStatusChange() {
+    const nextStatus =
+      complaint.status === "Open"
+        ? "In Progress"
+        : complaint.status === "In Progress"
+        ? "Resolved"
+        : "Open";
+
+    try {
+      await updateComplaintStatus(
+        complaint._id,
+        nextStatus
+      );
+
+      alert("Status updated.");
+
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+      alert("Failed to update status.");
     }
   }
 
@@ -54,22 +76,30 @@ export default function ComplaintCard({
           {complaint.studentName}
         </p>
 
-        <p className="text-sm">
+        <p>
           Block {complaint.hostelBlock} • Room {complaint.roomNumber}
         </p>
 
         <p>{complaint.description}</p>
 
         <p className="text-xs text-slate-400">
-          {new Date(complaint.createdAt).toLocaleDateString()}
+          {new Date(
+            complaint.createdAt
+          ).toLocaleDateString()}
         </p>
 
-        <Button
-          variant="destructive"
-          onClick={handleDelete}
-        >
-          Delete
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={handleStatusChange}>
+            Change Status
+          </Button>
+
+          <Button
+            variant="destructive"
+            onClick={handleDelete}
+          >
+            Delete
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );

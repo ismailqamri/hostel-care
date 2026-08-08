@@ -1,3 +1,21 @@
+export async function updateComplaintStatus(
+  id: string,
+  status: "Open" | "In Progress" | "Resolved"
+) {
+  const response = await fetch(`/api/complaints/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ status }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to update complaint");
+  }
+
+  return response.json();
+}
 export async function deleteComplaint(id: string) {
   const response = await fetch(`/api/complaints/${id}`, {
     method: "DELETE",
