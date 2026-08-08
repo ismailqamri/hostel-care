@@ -30,7 +30,7 @@ export default function ComplaintList() {
   }
 
   return (
-    <div className="mt-8">
+    <div>
       <SearchBar
         search={search}
         setSearch={setSearch}

@@ -13,12 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function ComplaintForm() {
   const [studentName, setStudentName] = useState("");
@@ -59,7 +54,6 @@ export default function ComplaintForm() {
       setDescription("");
 
       alert("Complaint submitted successfully!");
-
       window.location.reload();
     } catch (error) {
       console.error(error);
@@ -70,12 +64,8 @@ export default function ComplaintForm() {
   }
 
   return (
-    <Card className="mt-8">
-      <CardHeader>
-        <CardTitle>Submit Complaint</CardTitle>
-      </CardHeader>
-
-      <CardContent className="space-y-4">
+    <Card>
+      <CardContent className="space-y-4 p-6">
         <Input
           placeholder="Student Name"
           value={studentName}
