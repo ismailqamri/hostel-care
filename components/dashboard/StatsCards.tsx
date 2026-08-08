@@ -1,25 +1,39 @@
+"use client";
+
 import { Card, CardContent } from "@/components/ui/card";
+import { useComplaints } from "@/hooks/useComplaints";
 
 export default function StatsCards() {
+  const { complaints, loading } = useComplaints();
+
+  const total = complaints.length;
+  const open = complaints.filter((c) => c.status === "Open").length;
+  const inProgress = complaints.filter(
+    (c) => c.status === "In Progress"
+  ).length;
+  const resolved = complaints.filter(
+    (c) => c.status === "Resolved"
+  ).length;
+
   const stats = [
     {
       title: "Total Complaints",
-      value: 0,
+      value: total,
       color: "text-slate-900",
     },
     {
       title: "Open",
-      value: 0,
+      value: open,
       color: "text-yellow-600",
     },
     {
       title: "In Progress",
-      value: 0,
+      value: inProgress,
       color: "text-blue-600",
     },
     {
       title: "Resolved",
-      value: 0,
+      value: resolved,
       color: "text-green-600",
     },
   ];
@@ -29,10 +43,12 @@ export default function StatsCards() {
       {stats.map((stat) => (
         <Card key={stat.title}>
           <CardContent className="p-6">
-            <p className="text-sm text-slate-500">{stat.title}</p>
+            <p className="text-sm text-slate-500">
+              {stat.title}
+            </p>
 
             <h2 className={`mt-3 text-4xl font-bold ${stat.color}`}>
-              {stat.value}
+              {loading ? "..." : stat.value}
             </h2>
           </CardContent>
         </Card>

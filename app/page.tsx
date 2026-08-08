@@ -1,6 +1,7 @@
 import Header from "@/components/dashboard/Header";
 import StatsCards from "@/components/dashboard/StatsCards";
 import ComplaintForm from "@/components/dashboard/ComplaintForm";
+import ComplaintList from "@/components/dashboard/ComplaintList";
 
 export default function Home() {
   return (
@@ -9,6 +10,7 @@ export default function Home() {
         <Header />
         <StatsCards />
         <ComplaintForm />
+        <ComplaintList />
       </div>
     </main>
   );

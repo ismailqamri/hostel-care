@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { createComplaint } from "@/services/complaintService";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,7 +13,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export default function ComplaintForm() {
   const [studentName, setStudentName] = useState("");
@@ -19,6 +26,48 @@ export default function ComplaintForm() {
   const [roomNumber, setRoomNumber] = useState("");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit() {
+    if (
+      !studentName ||
+      !hostelBlock ||
+      !roomNumber ||
+      !category ||
+      !description
+    ) {
+      alert("Please fill all fields.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      await createComplaint({
+        studentName,
+        hostelBlock,
+        roomNumber,
+        category,
+        description,
+        status: "Open",
+      });
+
+      setStudentName("");
+      setHostelBlock("");
+      setRoomNumber("");
+      setCategory("");
+      setDescription("");
+
+      alert("Complaint submitted successfully!");
+
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+      alert("Failed to submit complaint.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <Card className="mt-8">
@@ -45,7 +94,10 @@ export default function ComplaintForm() {
           onChange={(e) => setRoomNumber(e.target.value)}
         />
 
-        <Select onValueChange={setCategory}>
+        <Select
+          value={category}
+          onValueChange={setCategory}
+        >
           <SelectTrigger>
             <SelectValue placeholder="Select Category" />
           </SelectTrigger>
@@ -67,8 +119,12 @@ export default function ComplaintForm() {
           onChange={(e) => setDescription(e.target.value)}
         />
 
-        <Button className="w-full">
-          Submit Complaint
+        <Button
+          className="w-full"
+          onClick={handleSubmit}
+          disabled={loading}
+        >
+          {loading ? "Submitting..." : "Submit Complaint"}
         </Button>
       </CardContent>
     </Card>

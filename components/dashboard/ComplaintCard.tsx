@@ -1,0 +1,76 @@
+"use client";
+
+import { Complaint, deleteComplaint } from "@/services/complaintService";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+
+interface ComplaintCardProps {
+  complaint: Complaint;
+}
+
+export default function ComplaintCard({
+  complaint,
+}: ComplaintCardProps) {
+  const statusColor = {
+    Open: "bg-yellow-500",
+    "In Progress": "bg-blue-500",
+    Resolved: "bg-green-500",
+  };
+
+  async function handleDelete() {
+    const confirmDelete = confirm(
+      "Are you sure you want to delete this complaint?"
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      await deleteComplaint(complaint._id);
+
+      alert("Complaint deleted successfully.");
+
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+      alert("Failed to delete complaint.");
+    }
+  }
+
+  return (
+    <Card>
+      <CardContent className="space-y-4 p-5">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold">
+            {complaint.category}
+          </h3>
+
+          <Badge className={statusColor[complaint.status]}>
+            {complaint.status}
+          </Badge>
+        </div>
+
+        <p className="text-sm text-slate-500">
+          {complaint.studentName}
+        </p>
+
+        <p className="text-sm">
+          Block {complaint.hostelBlock} • Room {complaint.roomNumber}
+        </p>
+
+        <p>{complaint.description}</p>
+
+        <p className="text-xs text-slate-400">
+          {new Date(complaint.createdAt).toLocaleDateString()}
+        </p>
+
+        <Button
+          variant="destructive"
+          onClick={handleDelete}
+        >
+          Delete
+        </Button>
+      </CardContent>
+    </Card>
+  );
+}
