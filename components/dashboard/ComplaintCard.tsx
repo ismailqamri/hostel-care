@@ -9,6 +9,13 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface ComplaintCardProps {
   complaint: Complaint;
@@ -17,18 +24,23 @@ interface ComplaintCardProps {
 export default function ComplaintCard({
   complaint,
 }: ComplaintCardProps) {
-  const statusColor = {
-    Open: "bg-yellow-500",
-    "In Progress": "bg-blue-500",
-    Resolved: "bg-green-500",
+  const statusColor: Record<
+    "Open" | "In Progress" | "Resolved",
+    string
+  > = {
+    Open: "bg-yellow-500 text-white",
+    "In Progress": "bg-blue-500 text-white",
+    Resolved: "bg-green-500 text-white",
   };
 
   async function handleDelete() {
-    if (!confirm("Delete this complaint?")) return;
+    if (!confirm("Are you sure you want to delete this complaint?")) {
+      return;
+    }
 
     try {
       await deleteComplaint(complaint._id);
-      alert("Complaint deleted.");
+      alert("Complaint deleted successfully.");
       window.location.reload();
     } catch (error) {
       console.error(error);
@@ -36,22 +48,12 @@ export default function ComplaintCard({
     }
   }
 
-  async function handleStatusChange() {
-    const nextStatus =
-      complaint.status === "Open"
-        ? "In Progress"
-        : complaint.status === "In Progress"
-        ? "Resolved"
-        : "Open";
-
+  async function handleStatusChange(
+    value: "Open" | "In Progress" | "Resolved"
+  ) {
     try {
-      await updateComplaintStatus(
-        complaint._id,
-        nextStatus
-      );
-
-      alert("Status updated.");
-
+      await updateComplaintStatus(complaint._id, value);
+      alert("Status updated successfully.");
       window.location.reload();
     } catch (error) {
       console.error(error);
@@ -60,7 +62,7 @@ export default function ComplaintCard({
   }
 
   return (
-    <Card>
+    <Card className="mt-4">
       <CardContent className="space-y-4 p-5">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold">
@@ -77,21 +79,39 @@ export default function ComplaintCard({
         </p>
 
         <p>
-          Block {complaint.hostelBlock} • Room {complaint.roomNumber}
+          Block <strong>{complaint.hostelBlock}</strong> • Room{" "}
+          <strong>{complaint.roomNumber}</strong>
         </p>
 
         <p>{complaint.description}</p>
 
         <p className="text-xs text-slate-400">
-          {new Date(
-            complaint.createdAt
-          ).toLocaleDateString()}
+          {new Date(complaint.createdAt).toLocaleDateString()}
         </p>
 
-        <div className="flex gap-2">
-          <Button onClick={handleStatusChange}>
-            Change Status
-          </Button>
+        <div className="flex items-center gap-3">
+          <Select
+            value={complaint.status}
+            onValueChange={(value) =>
+              handleStatusChange(
+                value as "Open" | "In Progress" | "Resolved"
+              )
+            }
+          >
+            <SelectTrigger className="w-44">
+              <SelectValue />
+            </SelectTrigger>
+
+            <SelectContent>
+              <SelectItem value="Open">Open</SelectItem>
+              <SelectItem value="In Progress">
+                In Progress
+              </SelectItem>
+              <SelectItem value="Resolved">
+                Resolved
+              </SelectItem>
+            </SelectContent>
+          </Select>
 
           <Button
             variant="destructive"
