@@ -1,6 +1,5 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
 import { useComplaints } from "@/hooks/useComplaints";
 import {
   BadgeCheck,
@@ -23,65 +22,72 @@ export default function StatsCards() {
 
   const stats = [
     {
-      title: "Total Complaints",
+      title: "Total",
       value: total,
-      color: "text-slate-950",
       icon: ClipboardList,
-      iconClassName: "bg-slate-100 text-slate-700",
+      accent: "bg-[#1e2333]",
     },
     {
       title: "Open",
       value: open,
-      color: "text-amber-700",
       icon: TriangleAlert,
-      iconClassName: "bg-amber-50 text-amber-600",
+      accent: "bg-[#d14c2d]",
     },
     {
       title: "In Progress",
       value: inProgress,
-      color: "text-blue-700",
       icon: Clock3,
-      iconClassName: "bg-blue-50 text-blue-600",
+      accent: "bg-[#52658f]",
     },
     {
       title: "Resolved",
       value: resolved,
-      color: "text-emerald-700",
       icon: BadgeCheck,
-      iconClassName: "bg-emerald-50 text-emerald-600",
+      accent: "bg-[#4f8668]",
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
       {stats.map((stat) => {
         const Icon = stat.icon;
 
         return (
-          <Card
+          <div
             key={stat.title}
-            className="rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
+            className="relative overflow-hidden rounded-2xl border border-[#e1d8c3] bg-[#fffdf8] p-5 shadow-[0_6px_20px_-14px_rgba(30,35,51,0.3)] transition duration-200 hover:-translate-y-0.5 hover:shadow-md"
           >
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between gap-4">
-                <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+            {/* Top accent line */}
+            <div
+              className={`absolute left-0 right-0 top-0 h-1 ${stat.accent}`}
+            />
+
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#6b6e7c]">
                   {stat.title}
                 </p>
 
-                <div
-                  className={`flex size-11 items-center justify-center rounded-2xl ${stat.iconClassName}`}
-                >
-                  <Icon className="size-5" />
-                </div>
+                <p className="mt-2 text-3xl font-bold tracking-tight text-[#1e2333]">
+                  {loading ? "..." : stat.value}
+                </p>
               </div>
 
-              <h2
-                className={`mt-5 text-4xl font-bold tracking-normal ${stat.color}`}
-              >
-                {loading ? "..." : stat.value}
-              </h2>
-            </CardContent>
-          </Card>
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f3ecdc] text-[#6b6e7c]">
+                <Icon className="h-4 w-4" />
+              </div>
+            </div>
+
+            {/* Bottom dashed detail */}
+            <div className="mt-4 border-t border-dashed border-[#e1d8c3] pt-3">
+              <p className="text-xs text-[#8a8792]">
+                {stat.title === "Total" && "All submitted tags"}
+                {stat.title === "Open" && "Awaiting action"}
+                {stat.title === "In Progress" && "Currently being handled"}
+                {stat.title === "Resolved" && "Successfully completed"}
+              </p>
+            </div>
+          </div>
         );
       })}
     </div>

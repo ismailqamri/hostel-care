@@ -6,41 +6,49 @@ import ComplaintList from "@/components/dashboard/ComplaintList";
 
 export default function AdminPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
-      <div className="mx-auto max-w-screen-xl p-6 md:p-8">
-        <div className="mb-8">
-          <p className="text-sm font-semibold uppercase tracking-wider text-blue-600">
-            Admin Portal
-          </p>
+    <main className="min-h-screen bg-[#f8f4ec] px-6 py-10 text-[#202638]">
+      <div className="mx-auto max-w-5xl">
+        {/* Header */}
+        <header className="mb-8">
+          <div className="mb-3 flex items-center gap-2">
+            <span className="h-2.5 w-2.5 rounded-full bg-[#e8a23d]" />
 
-          <h1 className="mt-2 text-4xl font-bold tracking-tight text-slate-900">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#c9780b]">
+              Admin Portal
+            </span>
+          </div>
+
+          <h1 className="text-5xl font-bold tracking-tight">
             HostelCare
           </h1>
 
-          <p className="mt-2 text-slate-500">
-            Manage hostel complaints and monitor resolution progress.
+          <p className="mt-2 text-lg text-[#73788a]">
+            Track every repair tag from open to resolved, block by block.
           </p>
+        </header>
+
+        {/* Statistics */}
+        <div className="mb-10">
+          <StatsCards />
         </div>
 
-        <StatsCards />
-
-        <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-5">
-          <section className="lg:col-span-2">
-            <h2 className="mb-4 text-xl font-semibold text-slate-900">
-              Submit Complaint
+        {/* Complaint Form */}
+        <section className="mb-10">
+          <div className="mb-4 flex items-center gap-4">
+            <h2 className="text-2xl font-bold">
+              Log a Repair Tag
             </h2>
 
-            <ComplaintForm />
-          </section>
+            <div className="h-px flex-1 bg-[#dfd5c2]" />
+          </div>
 
-          <section className="lg:col-span-3">
-            <h2 className="mb-4 text-xl font-semibold text-slate-900">
-              All Complaints
-            </h2>
+          <ComplaintForm />
+        </section>
 
-            <ComplaintList />
-          </section>
-        </div>
+        {/* Ticket Board */}
+        <section>
+          <ComplaintList />
+        </section>
       </div>
     </main>
   );

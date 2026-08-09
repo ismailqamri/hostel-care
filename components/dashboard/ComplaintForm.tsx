@@ -2,18 +2,6 @@
 
 import { useState } from "react";
 import { createComplaint } from "@/services/complaintService";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Card, CardContent } from "@/components/ui/card";
 import { SendHorizonal } from "lucide-react";
 
 export default function ComplaintForm() {
@@ -65,64 +53,100 @@ export default function ComplaintForm() {
   }
 
   return (
-    <Card className="rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
-      <CardContent className="space-y-5 p-6 sm:p-8">
-        <Input
-          placeholder="Student Name"
-          value={studentName}
-          onChange={(e) => setStudentName(e.target.value)}
-          className="h-11 rounded-xl border-slate-200 bg-slate-50/70 px-4 shadow-sm transition-all duration-200 placeholder:text-slate-400 focus-visible:border-blue-400 focus-visible:bg-white focus-visible:ring-blue-100"
-        />
+    <div className="relative rounded-2xl border border-[#e1d8c3] bg-[#fffdf8] p-6 shadow-[0_1px_0_rgba(30,35,51,0.04),0_8px_24px_-12px_rgba(30,35,51,0.18)]">
+      {/* Dashed paper edge */}
+      <div className="absolute left-6 right-6 top-0 border-t-2 border-dashed border-[#e1d8c3]" />
 
-        <Input
-          placeholder="Hostel Block"
-          value={hostelBlock}
-          onChange={(e) => setHostelBlock(e.target.value)}
-          className="h-11 rounded-xl border-slate-200 bg-slate-50/70 px-4 shadow-sm transition-all duration-200 placeholder:text-slate-400 focus-visible:border-blue-400 focus-visible:bg-white focus-visible:ring-blue-100"
-        />
+      {/* Student name + block */}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div>
+          <label className="mb-1.5 block text-[10.5px] font-semibold uppercase tracking-[0.09em] text-[#6b6e7c]">
+            Student Name
+          </label>
 
-        <Input
-          placeholder="Room Number"
-          value={roomNumber}
-          onChange={(e) => setRoomNumber(e.target.value)}
-          className="h-11 rounded-xl border-slate-200 bg-slate-50/70 px-4 shadow-sm transition-all duration-200 placeholder:text-slate-400 focus-visible:border-blue-400 focus-visible:bg-white focus-visible:ring-blue-100"
-        />
+          <input
+            placeholder="e.g. Sam"
+            value={studentName}
+            onChange={(e) => setStudentName(e.target.value)}
+            className="w-full rounded-[9px] border-[1.5px] border-[#e1d8c3] bg-[#faf7ef] px-3 py-2.5 text-sm text-[#1e2333] outline-none transition focus:border-[#e8a23d] focus:ring-4 focus:ring-[#e8a23d]/20"
+          />
+        </div>
 
-        <Select
-          value={category}
-          onValueChange={(value) => setCategory(value ?? "")}
-        >
-          <SelectTrigger className="h-11 w-full rounded-xl border-slate-200 bg-slate-50/70 px-4 shadow-sm transition-all duration-200 focus-visible:border-blue-400 focus-visible:bg-white focus-visible:ring-blue-100">
-            <SelectValue placeholder="Select Category" />
-          </SelectTrigger>
+        <div>
+          <label className="mb-1.5 block text-[10.5px] font-semibold uppercase tracking-[0.09em] text-[#6b6e7c]">
+            Hostel Block
+          </label>
 
-          <SelectContent className="rounded-xl border border-slate-200 bg-white shadow-lg">
-            <SelectItem value="Electrical">Electrical</SelectItem>
-            <SelectItem value="Plumbing">Plumbing</SelectItem>
-            <SelectItem value="Cleaning">Cleaning</SelectItem>
-            <SelectItem value="Internet">Internet</SelectItem>
-            <SelectItem value="Furniture">Furniture</SelectItem>
-            <SelectItem value="Mess">Mess</SelectItem>
-            <SelectItem value="Other">Other</SelectItem>
-          </SelectContent>
-        </Select>
+          <input
+            placeholder="e.g. Block A"
+            value={hostelBlock}
+            onChange={(e) => setHostelBlock(e.target.value)}
+            className="w-full rounded-[9px] border-[1.5px] border-[#e1d8c3] bg-[#faf7ef] px-3 py-2.5 text-sm text-[#1e2333] outline-none transition focus:border-[#e8a23d] focus:ring-4 focus:ring-[#e8a23d]/20"
+          />
+        </div>
+      </div>
 
-        <Textarea
-          placeholder="Describe your complaint..."
+      {/* Room + category */}
+      <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div>
+          <label className="mb-1.5 block text-[10.5px] font-semibold uppercase tracking-[0.09em] text-[#6b6e7c]">
+            Room Number
+          </label>
+
+          <input
+            placeholder="e.g. 101"
+            value={roomNumber}
+            onChange={(e) => setRoomNumber(e.target.value)}
+            className="w-full rounded-[9px] border-[1.5px] border-[#e1d8c3] bg-[#faf7ef] px-3 py-2.5 text-sm text-[#1e2333] outline-none transition focus:border-[#e8a23d] focus:ring-4 focus:ring-[#e8a23d]/20"
+          />
+        </div>
+
+        <div>
+          <label className="mb-1.5 block text-[10.5px] font-semibold uppercase tracking-[0.09em] text-[#6b6e7c]">
+            Category
+          </label>
+
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-full appearance-none rounded-[9px] border-[1.5px] border-[#e1d8c3] bg-[#faf7ef] px-3 py-2.5 text-sm text-[#1e2333] outline-none transition focus:border-[#e8a23d] focus:ring-4 focus:ring-[#e8a23d]/20"
+          >
+            <option value="">Select category</option>
+            <option value="Electrical">Electrical</option>
+            <option value="Plumbing">Plumbing</option>
+            <option value="Cleaning">Cleaning</option>
+            <option value="Internet">Internet</option>
+            <option value="Furniture">Furniture</option>
+            <option value="Mess">Mess</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Description */}
+      <div className="mt-3">
+        <label className="mb-1.5 block text-[10.5px] font-semibold uppercase tracking-[0.09em] text-[#6b6e7c]">
+          Description
+        </label>
+
+        <textarea
+          placeholder="Describe the issue..."
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="min-h-28 rounded-xl border-slate-200 bg-slate-50/70 px-4 py-3 shadow-sm transition-all duration-200 placeholder:text-slate-400 focus-visible:border-blue-400 focus-visible:bg-white focus-visible:ring-blue-100"
+          className="min-h-[90px] w-full resize-y rounded-[9px] border-[1.5px] border-[#e1d8c3] bg-[#faf7ef] px-3 py-2.5 text-sm leading-6 text-[#1e2333] outline-none transition placeholder:text-[#a8a2b8] focus:border-[#e8a23d] focus:ring-4 focus:ring-[#e8a23d]/20"
         />
+      </div>
 
-        <Button
-          className="h-11 w-full rounded-xl bg-gradient-to-r from-blue-600 to-sky-500 font-semibold text-white shadow-md shadow-blue-500/20 transition-all duration-200 hover:-translate-y-0.5 hover:from-blue-700 hover:to-sky-600 hover:shadow-lg hover:shadow-blue-500/25 active:scale-[0.99]"
-          onClick={handleSubmit}
-          disabled={loading}
-        >
-          <SendHorizonal className="size-4" />
-          {loading ? "Submitting..." : "Submit Complaint"}
-        </Button>
-      </CardContent>
-    </Card>
+      {/* Submit */}
+      <button
+        onClick={handleSubmit}
+        disabled={loading}
+        className="mt-[18px] flex h-[46px] w-full items-center justify-center gap-2 rounded-[10px] border-none bg-gradient-to-br from-[#1e2333] to-[#343b54] px-[18px] font-semibold text-[#faf7ef] shadow-lg transition hover:-translate-y-px hover:shadow-xl active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        <SendHorizonal className="h-[15px] w-[15px]" />
+
+        {loading ? "Submitting..." : "Submit Complaint"}
+      </button>
+    </div>
   );
 }

@@ -6,21 +6,9 @@ import {
   updateComplaintStatus,
 } from "@/services/complaintService";
 
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   CalendarDays,
-  MapPinned,
   Trash2,
-  UserCircle2,
 } from "lucide-react";
 
 interface ComplaintCardProps {
@@ -30,15 +18,6 @@ interface ComplaintCardProps {
 export default function ComplaintCard({
   complaint,
 }: ComplaintCardProps) {
-  const statusColor: Record<
-    "Open" | "In Progress" | "Resolved",
-    string
-  > = {
-    Open: "border-amber-200 bg-amber-50 text-amber-700",
-    "In Progress": "border-blue-200 bg-blue-50 text-blue-700",
-    Resolved: "border-emerald-200 bg-emerald-50 text-emerald-700",
-  };
-
   const studentInitial =
     complaint.studentName.trim().charAt(0).toUpperCase() || "S";
 
@@ -70,86 +49,100 @@ export default function ComplaintCard({
     }
   }
 
+  const statusStyles = {
+    Open: "border-[#d14c2d] text-[#c94b2d]",
+    "In Progress": "border-[#52658f] text-[#52658f]",
+    Resolved: "border-[#4f8668] text-[#4f8668]",
+  };
+
   return (
-    <Card className="rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
-      <CardContent className="space-y-5 p-6">
+    <div className="relative rounded-2xl border border-[#e1d8c3] bg-[#fffdf9] shadow-sm">
+      {/* Timeline marker */}
+      <div className="absolute left-[-17px] top-[54px] flex h-10 w-10 items-center justify-center rounded-full border-2 border-[#e1d8c3] bg-[#faf7ef]">
+        <div className="h-2.5 w-2.5 rounded-full bg-[#e8a23d]" />
+      </div>
+
+      <div className="relative p-6 pl-[60px]">
+        {/* Header */}
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h3 className="text-lg font-semibold tracking-normal text-slate-950">
+            <h3 className="text-xl font-bold tracking-tight text-[#1e2333]">
               {complaint.category}
             </h3>
-            <p className="mt-1 flex items-center gap-1.5 text-xs font-medium text-slate-500">
-              <CalendarDays className="size-3.5" />
+
+            <div className="mt-1.5 flex items-center gap-2 text-sm text-[#6b6e7c]">
+              <CalendarDays className="h-4 w-4" />
+
               {new Date(complaint.createdAt).toLocaleDateString()}
-            </p>
-          </div>
-
-          <Badge
-            className={`${statusColor[complaint.status]} h-7 rounded-full border px-3 text-xs font-semibold shadow-none`}
-          >
-            {complaint.status}
-          </Badge>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <div className="flex size-11 items-center justify-center rounded-2xl bg-slate-100 text-sm font-bold text-slate-700">
-            {studentInitial}
-          </div>
-          <div className="min-w-0">
-            <p className="flex items-center gap-1.5 truncate text-sm font-semibold text-slate-900">
-              <UserCircle2 className="size-4 text-slate-400" />
-              {complaint.studentName}
-            </p>
-            <div className="mt-2 flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600">
-                <MapPinned className="size-3.5 text-blue-500" />
-                Block {complaint.hostelBlock}
-              </span>
-              <span className="inline-flex rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600">
-                Room {complaint.roomNumber}
-              </span>
             </div>
           </div>
+
+          {/* Status stamp */}
+          <span
+            className={`rounded-[9px] border-2 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.12em] ${statusStyles[complaint.status]}`}
+          >
+            {complaint.status}
+          </span>
         </div>
 
-        <p className="rounded-xl border border-slate-100 bg-slate-50/70 p-4 text-sm leading-6 text-slate-600">
-          {complaint.description}
-        </p>
+        {/* Student information */}
+        <div className="mt-6 flex items-center gap-4">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#e8a23d] text-base font-bold text-white">
+            {studentInitial}
+          </div>
 
-        <div className="flex flex-col gap-3 border-t border-slate-100 pt-5 sm:flex-row sm:items-center sm:justify-between">
-          <Select
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-base font-semibold text-[#1e2333]">
+              {complaint.studentName}
+            </span>
+
+            <span className="rounded-full border border-[#e1d8c3] bg-[#f3ecdc] px-3 py-1 text-sm font-medium text-[#6b6e7c]">
+              Block {complaint.hostelBlock}
+            </span>
+
+            <span className="rounded-full border border-[#e1d8c3] bg-[#f3ecdc] px-3 py-1 text-sm font-medium text-[#6b6e7c]">
+              Room {complaint.roomNumber}
+            </span>
+          </div>
+        </div>
+
+        {/* Description */}
+        <div className="mt-5 rounded-xl border border-[#e1d8c3] bg-[#faf7ef] px-5 py-3.5">
+          <p className="text-sm leading-6 text-[#1e2333]">
+            {complaint.description}
+          </p>
+        </div>
+
+        {/* Bottom actions */}
+        <div className="mt-5 flex items-center justify-between gap-4">
+          {/* Status dropdown */}
+          <select
             value={complaint.status}
-            onValueChange={(value) =>
+            onChange={(e) =>
               handleStatusChange(
-                value as "Open" | "In Progress" | "Resolved"
+                e.target.value as
+                  | "Open"
+                  | "In Progress"
+                  | "Resolved"
               )
             }
+            className="h-11 w-[180px] appearance-none rounded-xl border-2 border-[#e1d8c3] bg-[#faf7ef] px-4 text-base text-[#1e2333] outline-none transition focus:border-[#e8a23d] focus:ring-4 focus:ring-[#e8a23d]/20"
           >
-            <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-white px-3 shadow-sm transition-all duration-200 focus-visible:border-blue-400 focus-visible:ring-blue-100 sm:w-44">
-              <SelectValue />
-            </SelectTrigger>
+            <option value="Open">Open</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Resolved">Resolved</option>
+          </select>
 
-            <SelectContent className="rounded-xl border border-slate-200 bg-white shadow-lg">
-              <SelectItem value="Open">Open</SelectItem>
-              <SelectItem value="In Progress">
-                In Progress
-              </SelectItem>
-              <SelectItem value="Resolved">
-                Resolved
-              </SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Button
-            variant="destructive"
-            className="h-10 rounded-xl border border-red-200 bg-white px-4 font-semibold text-red-600 shadow-sm transition-all duration-200 hover:border-red-300 hover:bg-red-50 hover:text-red-700 active:scale-[0.99]"
+          {/* Delete */}
+          <button
             onClick={handleDelete}
+            className="flex h-11 items-center gap-2 rounded-xl border-2 border-[#d14c2d] bg-transparent px-5 text-sm font-semibold text-[#c94b2d] transition hover:bg-[#d14c2d]/5 active:scale-[0.98]"
           >
-            <Trash2 className="size-4" />
+            <Trash2 className="h-4 w-4" />
             Delete
-          </Button>
+          </button>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
