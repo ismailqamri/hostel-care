@@ -1,11 +1,5 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI!;
-
-if (!MONGODB_URI) {
-  throw new Error("Please define the MONGODB_URI environment variable.");
-}
-
 interface MongooseCache {
   conn: typeof mongoose | null;
   promise: Promise<typeof mongoose> | null;
@@ -25,17 +19,42 @@ if (!global.mongooseCache) {
   global.mongooseCache = cached;
 }
 
+function getMongoUri() {
+  const uri = process.env.MONGODB_URI?.trim();
+
+  if (!uri) {
+    throw new Error("Please define the MONGODB_URI environment variable.");
+  }
+
+  if (
+    (uri.startsWith('"') && uri.endsWith('"')) ||
+    (uri.startsWith("'") && uri.endsWith("'"))
+  ) {
+    return uri.slice(1, -1);
+  }
+
+  return uri;
+}
+
 export async function connectDB() {
   if (cached.conn) {
     return cached.conn;
   }
 
   if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGODB_URI, {
+    cached.promise = mongoose.connect(getMongoUri(), {
       dbName: "hostel-care",
+      maxPoolSize: 10,
+      serverSelectionTimeoutMS: 10000,
     });
   }
 
-  cached.conn = await cached.promise;
+  try {
+    cached.conn = await cached.promise;
+  } catch (error) {
+    cached.promise = null;
+    throw error;
+  }
+
   return cached.conn;
 }

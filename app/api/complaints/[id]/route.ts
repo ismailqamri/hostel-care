@@ -2,6 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Complaint from "@/models/Complaint";
 
+export const runtime = "nodejs";
+
+function logApiError(context: string, error: unknown) {
+  console.error(context, {
+    error,
+    message: error instanceof Error ? error.message : undefined,
+    stack: error instanceof Error ? error.stack : undefined,
+  });
+}
+
 // PATCH /api/complaints/:id
 export async function PATCH(
   request: NextRequest,
@@ -26,7 +36,7 @@ export async function PATCH(
 
     return NextResponse.json(complaint);
   } catch (error) {
-    console.error(error);
+    logApiError("PATCH /api/complaints/:id failed", error);
 
     return NextResponse.json(
       { message: "Failed to update complaint" },
@@ -51,7 +61,7 @@ export async function DELETE(
       message: "Complaint deleted successfully",
     });
   } catch (error) {
-    console.error(error);
+    logApiError("DELETE /api/complaints/:id failed", error);
 
     return NextResponse.json(
       { message: "Failed to delete complaint" },
