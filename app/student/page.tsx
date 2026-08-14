@@ -100,7 +100,7 @@ export default function StudentPage() {
                 </p>
 
                 <p className="mt-2 text-sm text-[#73788a]">
-                  We couldn't find complaints under this name.
+                  We couldn&apos;t find complaints under this name.
                 </p>
               </div>
             ) : (
